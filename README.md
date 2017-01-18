@@ -1,8 +1,11 @@
 # industrial-robotics
 
 Developing software: Webstorm
+
 Languages used: 
+
     Back-end: Node.js, knowledgeBase OWL.
+    
     Front-end: HTML5, CSS, JavaScript, svg, jQuery.
 
 Program is used to control closed-loop production line in TUT FASTory.
