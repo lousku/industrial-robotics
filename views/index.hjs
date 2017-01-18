@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>{{ title }}</title>
+    <!--link stylesheets   -->
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <!-- include socket and ajax libraries   -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+    <script>
+        //connect socket to backend
+        var socket = io.connect('http://localhost:3000');
+        //variable to keep track on used Workstation
+        var WS;
+
+        //html site shows response information from backend
+        socket.on('WSupdated', function(msg){
+
+        });
+
+        socket.on('frontendPositions', function(palletPositions){
+          //gets array information of pallet states in locations 1-5
+            document.getElementById("pallet1").setAttribute("visibility","visible");
+
+            drawPallets(palletPositions);
+        });
+
+        //function to draw pallet positions to html page
+        function drawPallets(palletPosStatus) {
+
+            console.log("frontendPositions:" + palletPosStatus);
+            for (var i = 0; i<5;i++){
+                if(palletPosStatus[i]== 0){
+                    document.getElementById("pallet"+(i+1).toString()).setAttribute("visibility","hidden")
+                }
+                if(palletPosStatus[i]== 1){
+                    document.getElementById("pallet"+(i+1).toString()).setAttribute("visibility","visible")
+                }
+            }
+        }
+
+        <!--when button cklicked, emit event with message to socket    -->
+        $(document).ready(function(){
+            $("#updateWS").click(function(){
+                socket.emit('updateWS',  document.getElementById("WS_select").value );
+            });
+
+            $("#Move12").click(function(){
+                socket.emit('event', 'TransZone12' );
+            });
+            $("#Move23").click(function(){
+                socket.emit('event', 'TransZone23' );
+            });
+            $("#Move35").click(function(){
+                socket.emit('event', 'TransZone35' );
+            });
+            $("#Move14").click(function(){
+                socket.emit('event', 'TransZone14' );
+            });
+            $("#Move45").click(function(){
+                socket.emit('event', 'TransZone45' );
+            });
+            $("#Red").click(function(){
+                socket.emit('event', 'ChangePenRED' );
+            });
+            $("#Green").click(function(){
+                socket.emit('event', 'ChangePenGREEN' );
+            });
+            $("#Blue").click(function(){
+                socket.emit('event', 'ChangePenBLUE' );
+            });
+            $("#F1").click(function(){
+                socket.emit('event', 'Draw1' );
+            });
+            $("#F2").click(function(){
+                socket.emit('event', 'Draw2' );
+            });
+            $("#F3").click(function(){
+                socket.emit('event', 'Draw3' );
+            });
+            $("#S1").click(function(){
+                socket.emit('event', 'Draw4' );
+            });
+            $("#S2").click(function(){
+                socket.emit('event', 'Draw5' );
+            });
+            $("#S3").click(function(){
+                socket.emit('event', 'Draw6' );
+            });
+            $("#K1").click(function(){
+                socket.emit('event', 'Draw7' );
+            });
+            $("#K2").click(function(){
+                socket.emit('event', 'Draw8' );
+            });
+            $("#K3").click(function(){
+                socket.emit('event', 'Draw9' );
+            });
+        });
+
+    </script>
+
+  </head>
+
+  <body>
+    <h1>{{ title }}</h1>
+
+    <div id="cell">
+      <svg width="500" height="300">
+        <g id="WS2" transform="translate(0 0)" >
+
+          <rect id="WS_Base" x="125" y="0" width="100" height="100" style="fill: pink; stroke: black; stroke-width:3 " />
+
+          <line id="WS_CL1" x1="0" y1="100" x2="350" y2="100" stroke="#000000" stroke-width="3"/>
+          <line id="WS_CL2" x1="0" y1="130" x2="350" y2="130" stroke="#000000" stroke-width="3"/>
+
+          <line id="WS_CL3" x1="40" y1="130" x2="100" y2="200" stroke="#000000" stroke-width="3"/>
+          <line id="WS_CL4" x1="100" y1="200" x2="250" y2="200" stroke="#000000" stroke-width="3"/>
+          <line id="WS_CL5" x1="250" y1="200" x2="310" y2="130" stroke="#000000" stroke-width="3"/>
+
+          <line id="WS_CL6" x1="80" y1="130" x2="110" y2="170" stroke="#000000" stroke-width="3"/>
+          <line id="WS_CL7" x1="110" y1="170" x2="240" y2="170" stroke="#000000" stroke-width="3"/>
+          <line id="WS_CL8" x1="240" y1="170" x2="280" y2="130" stroke="#000000" stroke-width="3"/>
+
+          <rect id="pallet1" x="10" y="105" width="20" height="20" visibility="hidden"/>
+          <rect id="pallet2" x="105" y="105" width="20" height="20" visibility="hidden"/>
+          <rect id="pallet3" x="160" y="105" width="20" height="20" visibility="hidden"/>
+          <rect id="pallet4" x="160" y="175" width="20" height="20" visibility="hidden"/>
+          <rect id="pallet5" x="300" y="105" width="20" height="20" visibility="hidden"/>
+
+        </g>
+        Sorry, your browser does not support SVG.
+      </svg>
+
+
+      <!-- Own section for buttons-->
+  <div style="width:200px;" >
+    Select WS: <input type="text" id="WS_select" style = "width: 10%">
+
+    <button id="updateWS" type="button" style="font-family:Verdana;
+    font-size:100%;width: 40%;height: 40%">update</button>
+    <br>
+
+
+    <button id="Move12" type="button" style="font-family:Verdana;
+    font-size:100%;width: 100%;height: 20%">Move1->2</button> <br>
+
+    <button id="Move23" type="button" style="font-family:Verdana;
+    font-size:100%;width: 100%;height: 20%">Move2->3</button> <br>
+
+    <button id="Move35" type="button" style="font-family:Verdana;
+    font-size:100%;width: 100%;height: 20%">Move3->5</button> <br>
+
+    <button id="Move14" type="button" style="font-family:Verdana;
+    font-size:100%;width: 100%;height: 20%">Move1->4</button> <br>
+
+    <button id="Move45" type="button" style="font-family:Verdana;
+    font-size:100%;width: 100%;height: 20%">Move4->5</button> <br>
+
+    <button id="Red" type="button" style="font-family:Verdana;
+    font-size:100%;width: 32%;height: 20%">Red</button>
+
+    <button id="Green" type="button" style="font-family:Verdana;
+    font-size:100%;width: 32%;height: 20%">Green</button>
+
+    <button id="Blue" type="button" style="font-family:Verdana;
+    font-size:100%;width: 32%;height: 20%">Blue</button>
+
+    <button id="F1" type="button" style="font-family:Verdana;
+    font-size:100%;width: 32%;height: 20%">F1</button>
+
+    <button id="F2" type="button" style="font-family:Verdana;
+    font-size:100%;width: 32%;height: 20%">F2</button>
+
+    <button id="F3" type="button" style="font-family:Verdana;
+    font-size:100%;width: 32%;height: 20%">F3</button>
+
+    <button id="S1" type="button" style="font-family:Verdana;
+    font-size:100%;width: 32%;height: 20%">S1</button>
+
+    <button id="S2" type="button" style="font-family:Verdana;
+    font-size:100%;width: 32%;height: 20%">S2</button>
+
+    <button id="S3" type="button" style="font-family:Verdana;
+    font-size:100%;width: 32%;height: 20%">S3</button>
+
+    <button id="K1" type="button" style="font-family:Verdana;
+    font-size:100%;width: 32%;height: 20%">K1</button>
+
+    <button id="K2" type="button" style="font-family:Verdana;
+    font-size:100%;width: 32%;height: 20%">K2</button>
+
+    <button id="K3" type="button" style="font-family:Verdana;
+    font-size:100%;width: 32%;height: 20%">K3</button>
+
+  </div>
+
+    <p>Welcome to {{ title }}</p>
+  <p id="text"></p>
+
+  </body>
+</html>
